@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mini_katalog_app/home_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mini_katalog_app/features/products/view/home_view.dart';
+
 
 void main() {
-  runApp(const MiniCatologApp());
+  runApp(ProviderScope(child: const MiniCatologApp()));
 }
 
 class MiniCatologApp extends StatelessWidget {
@@ -10,9 +12,6 @@ class MiniCatologApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-  
-      home: HomeView(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: HomeView());
   }
 }
