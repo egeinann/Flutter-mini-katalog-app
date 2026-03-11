@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mini_katalog_app/features/widgets/card_provider.dart';
+
 import '../viewmodel/product_view_model.dart';
 import 'product_detail_view.dart';
 
@@ -13,6 +13,9 @@ class ProductGridView extends ConsumerWidget {
 
     return products.when(
       data: (list) => GridView.builder(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         padding: const EdgeInsets.all(8),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -32,31 +35,61 @@ class ProductGridView extends ConsumerWidget {
                 ),
               );
             },
-            child: Card(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(50),
+                    blurRadius: 4,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: product.thumbnail.isNotEmpty
-                        ? Image.network(product.thumbnail, fit: BoxFit.cover)
-                        : const Icon(Icons.image_not_supported),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        color: Colors.grey[400],
+                      ),
+                      child: product.thumbnail.isNotEmpty
+                          ? Image.network(
+                            product.thumbnail,
+                            fit: BoxFit.cover,
+                          )
+                          : const Icon(Icons.image_not_supported),
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(product.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("\$${product.price}", style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart),
-                    onPressed: () {
-                      ref.read(cartProvider.notifier).addProduct(product);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Ürün sepete eklendi")),
-                      );
-                    },
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Text(
+                          "\$${product.price}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
